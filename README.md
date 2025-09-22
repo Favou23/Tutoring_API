@@ -1,51 +1,33 @@
-# Tutoring_API
-DRF based Authorization API for an online tutoring platform.
-
-
-![Django REST API](/logo.svg)
-
 <div align="center">
-  <h1>Django REST Framework – JWT Authentication API</h1>
+  <h1>Tutoring_app Authentication and Authorization API</h1>
 </div>
 
 <div align="center">
-  <strong>Learn Django REST Framework by building a JWT-based authentication system</strong>
-</div>
-
-<div align="center">
-  This project is a step-by-step implementation of an authentication backend using Django, Django REST Framework, and SimpleJWT.
+  This project is a step-by-step implementation of an authentication backend using Django, Django REST Framework, Celery and SimpleJWT.
 </div>
 
 <br>
 
-<div align="center">
-  Please join the community: <br>
-  <a href="#">Website (Coming Soon)</a>
-  <span> | </span>
-  <a href="https://www.djangoproject.com/">Django</a>
-  <span> | </span>
-  <a href="https://www.django-rest-framework.org/">DRF</a>
-</div>
 
 ---
 
-## 🎯 Aims of this Project
+##  Aims of this Project
 The aims of this project are to:
 * Learn how to configure Django REST Framework
+* Use Celery for asynchronous operations in Django REST Framework
 * Understand JWT authentication (Access & Refresh tokens)
 * Learn how to use `.env` files for secret management
-* Provide reusable authentication boilerplate for other projects
 
 ---
 
-## 📖 Project Introduction
-This is not just code — it’s a **learning project**.  
+## Project Introduction
+This is not just code it’s a **learning project**.  
 
 The project demonstrates how to:
 * Build a **custom user model** that uses email instead of username
 * Configure **JWT authentication**
 * Securely manage secrets using **dotenv**
-* Create and test **authentication endpoints** with Postman or cURL  
+* Create and test **authentication endpoints** with Postman  
 
 The documentation also explains the **process I followed** to build it step by step.
 
