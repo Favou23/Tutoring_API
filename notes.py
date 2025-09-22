@@ -14,4 +14,7 @@
 # then i created a seriaizer file where i class register  serializer and added the validation for the password field and also creation
 # then i created the views for the register and logout
 # then i created the urls for the accounts app and included them in the main urls.py file
-#  
+# then i configures the postgres database and created the migrations and migrated
+# then i created a celery.py file in the base directory and configured the celery settings there
+# then i created a tasks.py file in the accounts app and created a sample task to send email
+# then i ran the server and the celery worker and tested the api using postman
