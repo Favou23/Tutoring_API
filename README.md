@@ -103,7 +103,7 @@ After configuring the database, generate and apply migrations:
  python migrate
  ```
 ## 4. Celery, redis and background task processing 
-*Why Celery?
+* why Celery?
 `In this project, some tasks (like sending emails, processing notifications, refreshing tokens, or heavy computations) should not block the main API response.
 If the API tried to do everything immediately (synchronously), users would wait a long time before receiving a response.
 *Celery is used as a background task queue that lets us offload time-consuming operations so the API can remain fast and responsive.`
