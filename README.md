@@ -35,6 +35,7 @@ The documentation also explains the **process I followed** to build it step by s
 
 ##  Process & Implementation
 
+
 ### 1. Setting up Django & DRF
 - Installed Django and DRF
   ```python
@@ -47,6 +48,13 @@ The documentation also explains the **process I followed** to build it step by s
   
 - Added the **`installed app`** and the **`rest_frameork`** and its associates to the settings.py file
  ```python 
+ 
+ REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+ }
+
   INSTALLED_APPS = [
     
     'rest_framework',
@@ -55,3 +63,9 @@ The documentation also explains the **process I followed** to build it step by s
     'accounts',
  ]
 
+- Configuring the JWT Authentication
+ ```python
+ SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
