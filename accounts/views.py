@@ -6,6 +6,7 @@ from .searializers import RegisterSerializer, LogoutSerializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
+from accounts.tasks import send_welcome_email
 
 
 User = get_user_model()
