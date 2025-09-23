@@ -107,7 +107,7 @@ After configuring the database, generate and apply migrations:
 `In this project, some tasks (like sending emails, processing notifications, refreshing tokens, or heavy computations) should not block the main API response.
 If the API tried to do everything immediately (synchronously), users would wait a long time before receiving a response.
 *Celery is used as a background task queue that lets us offload time-consuming operations so the API can remain fast and responsive.`
-### 5. Role of redis
+### Role of redis
 Celery needs a “broker” **(a message transport system)** to pass messages between the API and the Celery workers.
 * In this project, Redis is used as the message broker and result backend.
 * When the API receives a request that triggers a background task **(e.g., registration email),** the task is converted into a JSON message and pushed to Redis.
