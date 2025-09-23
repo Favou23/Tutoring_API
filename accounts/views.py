@@ -14,6 +14,10 @@ class Register(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
+
+    def perform_task(self, serializer):
+        user = serializer.save()
+        send_welcome_email.delay(user.email, user.username)
     
 class Logout (generics.GenericAPIView):
     serializer_class = LogoutSerializers
