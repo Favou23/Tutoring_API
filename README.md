@@ -104,3 +104,13 @@ After configuring the database, generate and apply migrations:
  python makemigrations
  python migrate
  ```
+## 4. Celery, redis and background task processing 
+* `why Celery?`
+* In this project, some tasks (like sending emails, processing notifications, refreshing tokens, or heavy computations) should not block the main API response.
+If the API tried to do everything immediately (synchronously), users would wait a long time before receiving a response.
+*Celery is used as a background task queue that lets us offload time-consuming operations so the API can remain fast and responsive.`
+### Role of redis
+Celery needs a “broker” **(a message transport system)** to pass messages between the API and the Celery workers.
+* In this project, Redis is used as the message broker and result backend.
+* When the API receives a request that triggers a background task **(e.g., registration email),** the task is converted into a JSON message and pushed to Redis.
+* A Celery worker (running in the background) listens for new messages in Redis, pulls them, executes the task, and stores the result.
