@@ -114,3 +114,48 @@ Celery needs a “broker” **(a message transport system)** to pass messages be
 * In this project, Redis is used as the message broker and result backend.
 * When the API receives a request that triggers a background task **(e.g., registration email),** the task is converted into a JSON message and pushed to Redis.
 * A Celery worker (running in the background) listens for new messages in Redis, pulls them, executes the task, and stores the result.
+## 5. JSON Messages Flow (on POST Request)
+Here’s what happens step by step when a client sends a POST request (registration or login):
+
+* A user sends a request (POST /api/register) with JSON payload.
+
+```python
+  {
+    "username": "newuser",
+    "email": "example@gmail.com",
+    "password": "securepassword123"
+  }
+  ```
+
+* Django REST Framework handles the request and saves the user (synchronously).
+* At the same time, a background task is scheduled **(send welcome email).**
+* Celery serializes the task into a JSON message:
+```python
+{
+  "task": "send_welcome_email",
+  "args": ["user@example.com"],
+  "kwargs": {},
+  "id": "c9d72a23-89f9-4f77-9d35-6c47c12e8e3a"
+}
+```
+* This message is published to Redis and waits in a queue.
+* A worker picks up the message, runs the send_welcome_email function, and completes the task asynchronously.
+* The client immediately receives a success response (without waiting for email sending).
+
+### tasks.py
+* Example Task (Email Sending):
+```python
+from celery import shared_task
+from django.core.mail import send_mail
+
+Email = "tutoringteam@gmail.com"
+
+@shared_task
+def send_welcome_email(user_email, username):
+    send_mail(
+        (f'welcome to the Tutoring app {username}'),
+        ("You have taken a bold step in your learning journey, we wish you the bset of luck")
+        (Email)
+        [user_email],
+        fail_silently=False,
+    )
