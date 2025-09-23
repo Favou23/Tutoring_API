@@ -13,10 +13,10 @@
 
 ##  Aims of this Project
 The aims of this project are to:
-* Learn how to configure Django REST Framework
+* Learn how to configure Django REST Framework for Aute
 * Use Celery for asynchronous operations in Django REST Framework
 * Understand JWT authentication (Access & Refresh tokens)
-* Learn how to use `.env` files for secret management
+* use `.env` files for secret management
 
 ---
 
