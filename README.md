@@ -159,3 +159,30 @@ def send_welcome_email(user_email, username):
         [user_email],
         fail_silently=False,
     )
+```
+
+## Installation
+1. Clone the repository:
+   ```sh
+   git clone <repository_url>
+   cd project_directory
+   ```
+2. Create a virtual environment and activate it:
+   ```sh
+   python -m venv venv
+    venv/Scripts/activate  # On linux/macos, use  source venv\bin\activate
+   ```
+3. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. Set up environment variables in `.env`:
+   ```sh
+   SECRET_KEY=your_secret_key
+   
+   ```
+5. Apply migrations and run the development server:
+   ```sh
+   python manage.py migrate
+   python manage.py runserver
+   ```
