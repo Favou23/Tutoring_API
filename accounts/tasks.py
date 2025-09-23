@@ -45,3 +45,33 @@ def send_profile_update_email(user_email):
         fail_silently=False,
     )
     return "Email sent"
+
+
+
+# (venv) PS C:\Users\USER\Desktop\my_first_api> celery -A tutoring_api worker --pool=solo -l info
+   
+#  -------------- celery@DESKTOP-KI96D30 v5.5.3 (immunity)
+# --- ***** ----- 
+# -- ******* ---- Windows-11-10.0.22631-SP0 2025-09-23 05:07:41
+# - *** --- * --- 
+# - ** ---------- [config]
+# - ** ---------- .> app:         tutoring_api:0x1a0652b1760
+# - ** ---------- .> transport:   redis://localhost:6379/0
+# - ** ---------- .> results:     redis://localhost:6379/0
+# - *** --- * --- .> concurrency: 8 (solo)
+# -- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+# --- ***** ----- 
+#  -------------- [queues]
+#                 .> celery           exchange=celery(direct) key=celery
+
+
+# [tasks]
+#   . accounts.tasks.send_account_deletion_email
+#   . accounts.tasks.send_password_reset_email
+#   . accounts.tasks.send_profile_update_email
+#   . accounts.tasks.send_welcome_email
+
+# [2025-09-23 05:07:43,734: INFO/MainProcess] Connected to redis://localhost:6379/0
+# [2025-09-23 05:07:45,774: INFO/MainProcess] mingle: searching for neighbors
+# [2025-09-23 05:07:52,941: INFO/MainProcess] mingle: all alone
+# [2025-09-23 05:08:03,131: INFO/MainProcess] celery@DESKTOP-KI96D30 ready

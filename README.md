@@ -94,6 +94,8 @@ In settings.py, update the DATABASES configuration to load sensitive values from
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
+
+        SECRET_KEY = os.getenv("SECRET_KEY")
     }
    }
    ```
