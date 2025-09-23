@@ -45,6 +45,13 @@ The documentation also explains the **process I followed** to build it step by s
   django-admin createproject tutoring_api
   py manage.py startapp accounts
   
-- Added `rest_framework` and `rest_framework_simplejwt` to `INSTALLED_APPS` in the settings.py file
-
+- Added the `installed app` and the `rest_frameork and its associates` to the settings.py file
+ ```python 
+  INSTALLED_APPS = [
+    
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    "rest_framework_simplejwt",
+    'accounts',
+ ]
 
