@@ -24,12 +24,12 @@ The aims of this project are to:
 This is not just code it’s a **learning project**.  
 
 The project demonstrates how to:
-* Integrate Celery asynchronous processes into Django rest framework
+* Integrate Celery asynchronous process into Django rest framework
 * Configure **JWT authentication**
 * Securely manage secrets using **dotenv**
 * Create and test **authentication endpoints** with Postman  
 
-The documentation also explains the **process I followed** to build it step by step.
+This documentation also explains the **process I followed** to build it step by step.
 
 ---
 
@@ -37,7 +37,7 @@ The documentation also explains the **process I followed** to build it step by s
 ### 1. Setting up Django & DRF
 - Installed Django and DRF
   ```python
-  pip install django djangorestframework rest_framework_simplejwt
+  pip install django djangorestframework rest_framework_simplejwt Celery Redis
   ```
   
 - Created a project and app
@@ -79,7 +79,7 @@ JWT, which stands for JSON Web Token, is a compact, stateless mechanism for API 
 
 ### 3. Database configuration 
 For this project, **PostgreSQL** is used instead of the default SQLite.  
-First, install the PostgreSQL driver:
+* First, install the PostgreSQL driver:
 ```python
 pip install psycopg2
 ```
@@ -101,15 +101,15 @@ In settings.py, update the DATABASES configuration to load sensitive values from
    ```
 After configuring the database, generate and apply migrations:
 ```python
- python makemigrations
- python migrate
+ python manage.py makemigrations
+ python manage.py migrate
  ```
 ## 4. Celery, redis and background task processing 
 * `why Celery?`
 * In this project, some tasks (like sending emails, processing notifications, refreshing tokens, or heavy computations) should not block the main API response.
 If the API tried to do everything immediately (synchronously), users would wait a long time before receiving a response.
-*Celery is used as a background task queue that lets us offload time-consuming operations so the API can remain fast and responsive.`
-### Role of redis
+**Celery** is used as a background task queue that lets us offload time-consuming operations so the API can remain fast and responsive.`
+#### Role of redis
 Celery needs a “broker” **(a message transport system)** to pass messages between the API and the Celery workers.
 * In this project, Redis is used as the message broker and result backend.
 * When the API receives a request that triggers a background task **(e.g., registration email),** the task is converted into a JSON message and pushed to Redis.
