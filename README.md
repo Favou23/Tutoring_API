@@ -24,7 +24,7 @@ The aims of this project are to:
 This is not just code it’s a **learning project**.  
 
 The project demonstrates how to:
-* Build a **custom user model** that uses email instead of username
+* Imtegrate Celery asynchronous processes into Django rest framework
 * Configure **JWT authentication**
 * Securely manage secrets using **dotenv**
 * Create and test **authentication endpoints** with Postman  
@@ -33,24 +33,18 @@ The documentation also explains the **process I followed** to build it step by s
 
 ---
 
-## 🛠 Process & Implementation
+##  Process & Implementation
 
 ### 1. Setting up Django & DRF
 - Installed Django and DRF
+  ```python
+  pip install django djangorestframework rest_framework_simplejwt`
+  
 - Created a project and app
-- Added `rest_framework` and `rest_framework_simplejwt` to `INSTALLED_APPS`
+  ```python
+  django-admin createproject tutoring_api
+  py manage.py startapp accounts
+  
+- Added `rest_framework` and `rest_framework_simplejwt` to `INSTALLED_APPS` in the settings.py file
 
-### 2. Creating a Custom User Model
-File: `models.py`
-```python
-from django.db import models
-from django.contrib.auth.models import AbstractUser 
 
-class User(AbstractUser):
-    email = models.EmailField(max_length=200, unique=True)
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
-
-    def __str__(self):
-        return self.email
