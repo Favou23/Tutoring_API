@@ -66,10 +66,11 @@ The documentation also explains the **process I followed** to build it step by s
 
 ---
 
-#### 2. Configuring the JWT Authentication
-`JWT, which stands for JSON Web Token, is a compact, stateless mechanism for API authentication. When a user logs into an application, the API server creates a digitally signed and encrypted JWT that includes the user's identity. The client then includes the JWT in every subsequent request, which the server deserializes and validates. The user's data is therefore not stored on the server's side, which improves scalability.`
+#### 2.  JWT Authentication
+JWT, which stands for JSON Web Token, is a compact, stateless mechanism for API authentication. When a user logs into an application, the API server creates a digitally signed and encrypted JWT that includes the user's identity. The client then includes the JWT in every subsequent request, which the server deserializes and validates. The user's data is therefore not stored on the server's side, which improves scalability.
 
- ```python
+* file:`settings.py`
+   ```python
   SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
