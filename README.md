@@ -34,17 +34,17 @@ The documentation also explains the **process I followed** to build it step by s
 ---
 
 ##  Process & Implementation
-
-
 ### 1. Setting up Django & DRF
 - Installed Django and DRF
   ```python
-  pip install django djangorestframework rest_framework_simplejwt`
+  pip install django djangorestframework rest_framework_simplejwt
+  ```
   
 - Created a project and app
   ```python
   django-admin createproject tutoring_api
   py manage.py startapp accounts
+  ```
   
 - Added the **`installed app`** and the **`rest_frameork`** and its associates to the settings.py file
  ```python 
@@ -53,19 +53,21 @@ The documentation also explains the **process I followed** to build it step by s
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
- }
+  }
 
-  INSTALLED_APPS = [
+ INSTALLED_APPS = [
     
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
-    "rest_framework_simplejwt",
-    'accounts',
+  'rest_framework',
+  'rest_framework_simplejwt.token_blacklist',
+  "rest_framework_simplejwt",
+  'accounts',
  ]
+ ```
 
-- Configuring the JWT Authentication
+#### 2. Configuring the JWT Authentication
  ```python
- SIMPLE_JWT = {
+  SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-}
+  }
+  ```
