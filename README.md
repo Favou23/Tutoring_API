@@ -114,18 +114,49 @@ Celery needs a “broker” **(a message transport system)** to pass messages be
 * In this project, Redis is used as the message broker and result backend.
 * When the API receives a request that triggers a background task **(e.g., registration email),** the task is converted into a JSON message and pushed to Redis.
 * A Celery worker (running in the background) listens for new messages in Redis, pulls them, executes the task, and stores the result.
-## 5. JSON Messages Flow (on POST Request)
-Here’s what happens step by step when a client sends a POST request (registration or login):
-
+## 5. Authentication EndPoints (on POST Request)
+Here’s what happens step by step when a client sends a registration POST request:
 * A user sends a request (POST /api/register) with JSON payload.
-
 ```python
   {
     "username": "newuser",
     "email": "example@gmail.com",
-    "password": "securepassword123"
+    "password": "securepassword123",
+    "password2": "securepassword123"
   }
+  
+  RESPONSE
+  {
+    
+    "username": "newuser",
+    "email": "example@gmail.com"
+  }
+
   ```
+## Login
+Here’s what happens step by step when a client sends a Login POST request:
+```python
+ {
+  "email": "example@gmail.com"
+  "password": "securepassword123"
+ }
+
+RESPONSE
+  {"refresh":
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1ODg0Mjk2NSwiaWF0IjoxNzU4NzU2NTY1LCJqdGkiOiI0Y2VhZDVhYTc3MjM0YmU3ODk0MTQ2ZWEyNDI1YWExNiIsInVzZXJfaWQiOiI5In0.mqAS-bgN-X899vSvVJUWQaFl7ar6gzXggmrlORguZoI",
+  
+  "access":
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4NzU3NDY1LCJpYXQiOjE3NTg3NTY1NjUsImp0aSI6IjQxMTc2M2Q5ODc2YzQ1M2E5NDZiMDllZTYwNmFjMWRhIiwidXNlcl9pZCI6IjkifQ.Ya9vJdaI66oSwdOBStHhvrO9Yn4cYnikNKE-WHBQF4g"}
+```
+## Logout
+Here’s what happens step by step when a client sends a Logout POST request:
+```python
+ {"refresh":
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1ODg0Mjk2NSwiaWF0IjoxNzU4NzU2NTY1LCJqdGkiOiI0Y2VhZDVhYTc3MjM0YmU3ODk0MTQ2ZWEyNDI1YWExNiIsInVzZXJfaWQiOiI5In0.mqAS-bgN-X899vSvVJUWQaFl7ar6gzXggmrlORguZoI"}
+
+RESPONSE
+  {"message":"Successfuly logged out"}
+```
 
 * Django REST Framework handles the request and saves the user (synchronously).
 * At the same time, a background task is scheduled **(send welcome email).**
