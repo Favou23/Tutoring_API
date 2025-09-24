@@ -158,7 +158,7 @@ RESPONSE
   {"message":"Successfuly logged out"}
 ```
 
-* Django REST Framework handles the request and saves the user (synchronously).
+<!-- * Django REST Framework handles the request and saves the user (synchronously).
 * At the same time, a background task is scheduled **(send welcome email).**
 * Celery serializes the task into a JSON message:
 ```python
@@ -168,7 +168,7 @@ RESPONSE
   "kwargs": {},
   "id": "c9d72a23-89f9-4f77-9d35-6c47c12e8e3a"
 }
-```
+``` -->
 * This message is published to Redis and waits in a queue.
 * A worker picks up the message, runs the send_welcome_email function, and completes the task asynchronously.
 * The client immediately receives a success response (without waiting for email sending).
