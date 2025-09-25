@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 
 
 
+
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -33,3 +34,17 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LogoutSerializers(serializers.Serializer):
     refresh = serializers.CharField()
     
+    
+    
+class ResetPasswordRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only= True,validators=[validate_password])
+    password2= serializers.CharField(write_only= True)
+    
+    def validate(self,attributes):
+        if attributes['password'] != attributes['password2']:
+            raise serializers.ValidationError({"password":"password must match"})
+        return attributes

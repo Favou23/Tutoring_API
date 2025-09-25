@@ -2,14 +2,22 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from .searializers import RegisterSerializer, LogoutSerializers
+from .searializers import RegisterSerializer, LogoutSerializers,ResetPasswordRequestSerializer
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from accounts.tasks import send_welcome_email
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import force_bytes,force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.core.mail import send_mail
+from .searializers import SetNewPasswordSerializer
+# from django.contrib.auth import default_token_generator
+
 
 
 User = get_user_model()
+token_generator = PasswordResetTokenGenerator()
 
 class Register(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -36,19 +44,46 @@ class Logout (generics.GenericAPIView):
             return Response ({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class RequestPasswordReset(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        serializer = ResetPasswordRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        email = serializer.validated_data["email"]
+        user = User.objects.filter(email=email).first()
+        
+        if user :
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = token_generator.make_token(user)
+            reset_link =  f"http://localhost:8000/api/reset-password-confirm/{uid}/{token}/"
+        
+        send_mail(
+            subject = "password Reset Request",
+            message = f"click here to reset your password:{reset_link}",
+            from_email = "noreply@tutoriingapp.com",
+            recipient_list = [email],
+            fail_silently = False,
+        )
+        return Response({"message": "if the email exixsts, a reset link has been sent."})
+    
+    
 class ResetPassword(APIView):
     permission_classes = [AllowAny]
-    def post(self, request):
-        email = request.data.get("email")
-        if not email:
-            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, uidb64,token):
+        serializer = SetNewPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         
         try:
-            user = User.objects.get(email=email)
-            # Here you would generate a password reset token and send an email
-            # For simplicity, we'll just simulate this process
-            reset_token = "dummy-reset-token"  # Replace with actual token generation logic
-            # Send email logic goes here
-            return Response({"message": "Password reset email sent"}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({"error": "User with this email does not exist"}, status=status.HTTP_404_NOT_FOUND)
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+            
+            if not token_generator.check_token(user,token):
+                return Response ({"error": "Invalid or expired token"}, status=400)
+
+            user.set_password(serializer.validated_data["password"])
+            user.save()
+            return Response({"message": "password reset successful"} )
+        except Exception as e:
+            return Response({"error": "Invalid Request"}, status=400)

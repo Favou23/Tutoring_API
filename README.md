@@ -114,7 +114,39 @@ Celery needs a “broker” **(a message transport system)** to pass messages be
 * In this project, Redis is used as the message broker and result backend.
 * When the API receives a request that triggers a background task **(e.g., registration email),** the task is converted into a JSON message and pushed to Redis.
 * A Celery worker (running in the background) listens for new messages in Redis, pulls them, executes the task, and stores the result.
-## 5. Authentication EndPoints (on POST Request)
+
+* Django REST Framework handles the request and saves the user (synchronously).
+* At the same time, a background task is scheduled **(send welcome email).**
+* Celery serializes the task into a JSON message:
+```python
+{
+  "task": "send_welcome_email",
+  "args": ["user@example.com"],
+}
+```
+* This message is published to Redis and waits in a queue.
+* A worker picks up the message, runs the send_welcome_email function, and completes the task asynchronously.
+* The client immediately receives a success response (without waiting for email sending).
+
+### tasks.py
+* Example Task (Email Sending):
+```python
+from celery import shared_task
+from django.core.mail import send_mail
+
+Email = "tutoringteam@gmail.com"
+
+@shared_task
+def send_welcome_email(user_email, username):
+    send_mail(
+        (f'welcome to the Tutoring app {username}'),
+        ("You have taken a bold step in your learning journey, we wish you the bset of luck")
+        (Email)
+        [user_email],
+        fail_silently=False,
+    )
+```
+## 5. Authentication/Authorization EndPoints (on POST Request)
 Here’s what happens step by step when a client sends a registration POST request:
 * A user sends a request (POST /api/register) with JSON payload.
 ```python
@@ -157,39 +189,34 @@ Here’s what happens step by step when a client sends a Logout POST request:
 RESPONSE
   {"message":"Successfuly logged out"}
 ```
+## password Reset
+Here’s what happens step by step when a client sends a ResetPassword POST request:
+* `POST /api/reset-password/`
+```python
+ {
+  "email": "user@example.com"
+ }
 
-<!-- * Django REST Framework handles the request and saves the user (synchronously).
-* At the same time, a background task is scheduled **(send welcome email).**
-* Celery serializes the task into a JSON message:
+RESPONSE
+ {"message":"if the email exixsts, a reset link has been sent."}
+```
+### Confirm Password Reset
+* `/api/reset-password-confirm/MQ/cwohnr-3dc912ef3412900a24087b874c26cc75/`
 ```python
 {
-  "task": "send_welcome_email",
-  "args": ["user@example.com"],
-  "kwargs": {},
-  "id": "c9d72a23-89f9-4f77-9d35-6c47c12e8e3a"
+  "password": "newstrongpassword",
+  "password2": "newstrongpassword"
 }
-``` -->
-* This message is published to Redis and waits in a queue.
-* A worker picks up the message, runs the send_welcome_email function, and completes the task asynchronously.
-* The client immediately receives a success response (without waiting for email sending).
-
-### tasks.py
-* Example Task (Email Sending):
+RESPONSE
+{
+  "message": "Password reset successful"
+}
+```
+* If invalid/Expired 
 ```python
-from celery import shared_task
-from django.core.mail import send_mail
-
-Email = "tutoringteam@gmail.com"
-
-@shared_task
-def send_welcome_email(user_email, username):
-    send_mail(
-        (f'welcome to the Tutoring app {username}'),
-        ("You have taken a bold step in your learning journey, we wish you the bset of luck")
-        (Email)
-        [user_email],
-        fail_silently=False,
-    )
+{
+  "error": "Invalid or expired token"
+}
 ```
 
 ## Installation
