@@ -12,7 +12,21 @@ def send_welcome_email(user_email, username):
         [user_email],
         fail_silently=False,
     )
-    
+@shared_task
+def send_password_reset_success_email(user_email):
+    subject = "Your password was reset successfully"
+    message = (
+        "Hello,\n\n"
+        "Your password has been reset successfully. "
+        "If you did not perform this action, please contact support immediately."
+    )
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user_email],
+        fail_silently=False,
+    )
 @shared_task
 def send_password_reset_email(user_email, reset_link):
     send_mail(
