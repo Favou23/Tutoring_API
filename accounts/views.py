@@ -84,6 +84,7 @@ class ResetPassword(APIView):
 
             user.set_password(serializer.validated_data["password"])
             user.save()
+            send_password_reset_success_email.delay(user.email)
             return Response({"message": "password reset successful"} )
         except Exception as e:
             return Response({"error": "Invalid Request"}, status=400)
