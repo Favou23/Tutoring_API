@@ -1,0 +1,9 @@
+__pycache
+/venv 
+.git 
+.gitignore 
+.env 
+pyc 
+notes.py 
+.vs code 
+.gitignore
