@@ -16,7 +16,7 @@ services:
       - db
       - redis
     ports:
-      - "8000:8000"
+      - "8000:8080"
 
   db:
     image: postgres:latest
