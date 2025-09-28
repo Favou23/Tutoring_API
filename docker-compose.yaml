@@ -59,8 +59,8 @@ services:
       context: .
     container_name: django_app
     environment:
-      - DATABASE_URL=postgres://${favour}:${godsfavour}@localhosts:5432/${tutoring}
-      - CELERY_BROKER_URL=${redis://localhost:6379/0}
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
+      - CELERY_BROKER_URL=redis://localhost:6379/0
       - DJANGO_SECRET_KEY=${django-insecure-kyg^yf!ax%(#ot3#g9!w27f$f2wyoysx$-=g$nmc5zwp^&tcoz}
     depends_on:
       - db
