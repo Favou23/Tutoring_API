@@ -1,4 +1,4 @@
-__pycache
+__pycache__
 /venv 
 .git 
 .gitignore 
@@ -7,3 +7,5 @@ pyc
 notes.py 
 .vs code 
 .gitignore
+LICENSE
+README.md
