@@ -1,57 +1,5 @@
-# version: '3.8'
-
-# services:
-#   django:
-#     build:
-#       context: .
-#     container_name: django_app
-#     command: python manage.py runserver 0.0.0.0:8000
-#     volumes:
-#       - .:/app
-#     ports:
-#       - "8000:8000"
-#     depends_on:
-#       - db
-#       - redis
-#     environment:
-#       - DATABASE_URL=postgres://postgres:password@db:5432/postgres
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-
-#   db:
-#     image: postgres:15
-#     container_name: postgres_db
-#     environment:
-#       POSTGRES_USER: postgres
-#       POSTGRES_PASSWORD: password
-#       POSTGRES_DB: postgres
-#     volumes:
-#       - postgres_data:/var/lib/postgresql/data
-#     ports:
-#       - "5432:5432"
-
-#   redis:
-#     image: redis:7
-#     container_name: redis_worker
-#     ports:
-#       - "6379:6379"
-
-#   celery:
-#     build:
-#       context: .
-#     container_name: celery_worker
-#     command: celery -A your_project_name worker --loglevel=info
-#     depends_on:
-#       - redis
-#       - django
-#     environment:
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-# volumes:
-#   postgres_data:
 
 
-version: '3.8'
 
 services:
   django:
@@ -59,9 +7,11 @@ services:
       context: .
     container_name: django_app
     environment:
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
-      - CELERY_BROKER_URL=redis://localhost:6379/0
-      - DJANGO_SECRET_KEY=${django-insecure-kyg^yf!ax%(#ot3#g9!w27f$f2wyoysx$-=g$nmc5zwp^&tcoz}
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - DJANGO_SECRET_KEY=${SECRET_KEY}
+    env_file:
+      - .env
     depends_on:
       - db
       - redis
@@ -88,7 +38,7 @@ services:
     build:
       context: .
     container_name: celery_worker
-    command: celery -A your_project_name worker --loglevel=info
+    command: celery -A tutoring_api worker --loglevel=info
     depends_on:
       - redis
       - django
