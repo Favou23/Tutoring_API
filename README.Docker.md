@@ -33,14 +33,19 @@ CELERY_RESULTS_BACKEND= 'redis://redis:6379/0' #unchanged
 ## step 5:
 * RUN THE DOCKER COMMAND TO BUILD THE IMAGES AND SPIN UP THE CONTAINERS AFTER BUILDING
 ```sh
- docker-compose up --build
+ docker-compose up -d --build
  # YOU SHOULD SEE THE PROJECT RUNNING IN YOUR MACHINE LOCALHOST SERVER "http://localhost:8000"
 ```
-* FOR SUBSEQUENT SPINNING UP OF THE CONTAINER, RUN THE COMMAND BELOW:
+* **NOTE** FOR SUBSEQUENT SPINNING UP OF THE CONTAINER, RUN THE COMMAND BELOW:
 ```sh
  docker-compose up
 ```
 ## STEP 6:
+* RUN MIGRATIONS 
+```sh
+docker-compose exec web python manage.py migrate
+```
+## STEP 7:
 * **TESTING THE ENDPOINTS OF THE API's**
 =====> to test the registeration endpoint on your localhost server input the url below:
 ```sh
