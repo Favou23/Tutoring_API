@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os 
-from pathlib import Path
 from datetime import timedelta
 
 
@@ -48,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     "rest_framework_simplejwt",
+    "drf_spectacular",
     'accounts',
 ]
 AUTH_USER_MODEL = "accounts.User"
@@ -66,7 +66,17 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Auth API Documentation',
+    'DESCRIPTION': 'API documentation for authentication and user management service.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+     'COMPONENT_SPLIT_REQUEST': True,
+}
+
 
 ROOT_URLCONF = 'tutoring_api.urls'
 

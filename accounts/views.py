@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .searializers import RegisterSerializer, LogoutSerializers,ResetPasswordRequestSerializer
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -12,8 +12,9 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes,force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.core.mail import send_mail
-from .searializers import SetNewPasswordSerializer
+from .searializers import SetNewPasswordSerializer, UserSerializer
 from .tasks import send_password_reset_email, send_password_reset_success_email
+from rest_framework.views import APIView
 
 # from django.contrib.auth import default_token_generator
 
@@ -84,3 +85,12 @@ class ResetPassword(APIView):
             return Response({"message": "password reset successful"} )
         except Exception as e:
             return Response({"error": "Invalid Request"}, status=400)
+
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

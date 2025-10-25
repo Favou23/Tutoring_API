@@ -48,3 +48,9 @@ class SetNewPasswordSerializer(serializers.Serializer):
         if attributes['password'] != attributes['password2']:
             raise serializers.ValidationError({"password":"password must match"})
         return attributes
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", "email"]
