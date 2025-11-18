@@ -15,14 +15,8 @@ from django.core.mail import send_mail
 from .searializers import SetNewPasswordSerializer, UserSerializer
 from .tasks import send_password_reset_email, send_password_reset_success_email
 from rest_framework.views import APIView
-
-# from django.contrib.auth import default_token_generator
-
-
-
 User = get_user_model()
 token_generator = PasswordResetTokenGenerator()
-
 class Register(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
@@ -30,8 +24,7 @@ class Register(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        send_welcome_email.delay(user.email, user.username)
-    
+        send_welcome_email.delay(user.email, user.username)   
 class Logout (generics.GenericAPIView):
     serializer_class = LogoutSerializers
     def post(self, request):
@@ -46,8 +39,6 @@ class Logout (generics.GenericAPIView):
             return Response ({'message': "Successfuly logged out"}, status= status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response ({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
 class RequestPasswordReset(APIView):
     permission_classes = [AllowAny]
     
@@ -64,7 +55,6 @@ class RequestPasswordReset(APIView):
             reset_link =  f"http://localhost:8000/api/reset-password-confirm/{uid}/{token}/"
             send_password_reset_email.delay(email, reset_link)
         return Response({"message": "if the email exixsts, a reset link has been sent."})
-    
     
 class ResetPassword(APIView):
     permission_classes = [AllowAny]
@@ -92,5 +82,22 @@ class ProfileView(APIView):
 
     def get(self, request):
         user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    
+
+# class UserDetailView(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [IsAuthenticated]  
+
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found"}, status=404)
         serializer = UserSerializer(user)
         return Response(serializer.data)
